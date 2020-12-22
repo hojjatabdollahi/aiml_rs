@@ -3,12 +3,12 @@ use minidom::Element;
 
 #[derive(Debug)]
 pub struct AIML {
-    nodes: Vec<Node>,
+    pub nodes: Vec<Node>,
     current_node: usize,
 }
 
 /// This struct is going to map exactly the content of the aiml _category_ node.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Node {
     pub pattern: String,
     pub template: Option<Element>,
@@ -22,17 +22,13 @@ impl AIML {
             current_node: 0,
         }
     }
-
-    // pub fn append(&mut self, pattern: String) {
-    //     self.nodes.push(pattern);
-    // }
 }
 
 impl Iterator for AIML {
-    type Item = String;
+    type Item = Node;
 
-    fn next(&mut self) -> Option<String> {
+    fn next(&mut self) -> Option<Node> {
         self.current_node += 1;
-        Some(self.nodes.get(self.current_node - 1)?.to_owned())
+        self.nodes.get(self.current_node - 1).cloned()
     }
 }
