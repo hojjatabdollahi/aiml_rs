@@ -1,8 +1,9 @@
-use std::fmt::write;
+use minidom::Element;
+
 
 #[derive(Debug)]
 pub struct AIML {
-    nodes: Vec<String>,
+    nodes: Vec<Node>,
     current_node: usize,
 }
 
@@ -10,7 +11,8 @@ pub struct AIML {
 #[derive(Debug)]
 pub struct Node {
     pub pattern: String,
-    pub template: String,
+    pub template: Option<Element>,
+    pub topic: Option<String>,
 }
 
 impl AIML {
@@ -21,9 +23,9 @@ impl AIML {
         }
     }
 
-    pub fn append(&mut self, pattern: String) {
-        self.nodes.push(pattern);
-    }
+    // pub fn append(&mut self, pattern: String) {
+    //     self.nodes.push(pattern);
+    // }
 }
 
 impl Iterator for AIML {

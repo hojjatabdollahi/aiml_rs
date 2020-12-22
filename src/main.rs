@@ -2,7 +2,6 @@
 extern crate log;
 extern crate env_logger;
 
-use trees;
 mod libaiml;
 
 /// This is the struct that will contain all the data
@@ -11,12 +10,12 @@ struct Aiml {
     pattern: String,
     that: String,
 }
-impl Aiml {
-    fn new(pattern: String, that: String) -> Self {
-        //! This is a function that creates a new AIML tag
-        Self { pattern, that }
-    }
-}
+// impl Aiml {
+//     fn new(pattern: String, that: String) -> Self {
+//         //! This is a function that creates a new AIML tag
+//         Self { pattern, that }
+//     }
+// }
 
 fn main() {
     if std::env::var("RUST_LOG").is_err() {

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+    <category>
+        <pattern># ADVENTURE ^</pattern>
+        <that>Do you prefer adventure, horror, drama, or mystery?</that>
+        <template>
+            <think><set name="topic">adventure</set></think>
+            <think><set name="dialogue">reading</set></think>
+            There's nothing like a good adventure to liven things up!
+            <set name="most recent dialogue question">Have you ever read The Adventures of Tom Sawyer?</set>
+            <oob>
+                <robot></robot>
+            </oob>
+        </template>
+    </category>
+
+    <topic name="adventure">
+
+        <category>
+            <pattern># <set>YES</set> ^</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># <set>NO</set> ^</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+              The Adventures of Tom Sawyer is about a boy living on the Mississippi River.
+              <set name="most recent dialogue question">Did you like to go exploring when you were kid?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># NOT SURE #</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+              The Adventures of Tom Sawyer is about a boy living on the Mississippi River.
+              <set name="most recent dialogue question">Did you like to go exploring when you were kid?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern>_</pattern>
+            <that>What did you think of all the mischief Tom got into?</that>
+            <template>
+                He certainly was curious and never liked to sit still very long. <set name="most recent dialogue question">Did you like to go exploring when you were kid?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># <set>YES</set> ^</pattern>
+            <that>Did you like to go exploring when you were kid?</that>
+            <template>
+                How exciting! <set name="most recent dialogue question">What did you explore, and what happened?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># <set>NO</set> ^</pattern>
+            <that>Did you like to go exploring when you were kid?</that>
+            <template>
+                I do not do much exploring myself!
+                <set name="most recent dialogue question">Are you familiar with Tom Clancy's writing?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># <set>DON T KNOW</set> ^</pattern>
+            <that>Did you like to go exploring when you were kid?</that>
+            <template>
+              I do not do much exploring myself!
+              <set name="most recent dialogue question">Are you familiar with Tom Clancy's writing?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># NOT SURE #</pattern>
+            <that>Did you like to go exploring when you were kid?</that>
+            <template>
+              I do not do much exploring myself!
+              <set name="most recent dialogue question">Are you familiar with Tom Clancy's writing?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern>_</pattern>
+            <that>What did you explore, and what happened?</that>
+            <template>
+                You weren't so different from Tom Sawyer after all! <set name="most recent dialogue question">Do you still like to explore?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># <set>DON T KNOW</set> ^</pattern>
+            <that>What did you explore, and what happened?</that>
+            <template>
+                <set name="most recent dialogue question">Do you still like to explore?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern># NOT SURE #</pattern>
+            <that>What did you explore, and what happened?</that>
+            <template>
+                <set name="most recent dialogue question">Do you still like to explore?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+    </topic>
+</aiml>

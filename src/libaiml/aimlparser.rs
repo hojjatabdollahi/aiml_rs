@@ -1,83 +1,73 @@
-use minidom::Element;
+use std::cmp::Ordering;
+
+use minidom::{Element, Node, element::Nodes};
 
 use super::aiml::AIML;
-use super::aiml::Node;
-// use quick_xml::events::Event;
-// use quick_xml::Reader;
 
 /// This parses the aiml text inside an aiml file.
+/// This is called by the loader.rs and it receives the content of a file
+/// It will add the Nodes to the AIML root
 pub fn parse(xmldata: &str, root: &mut AIML) {
-    // let tokenizer = xmlparser::Tokenizer::from(xmldata); // for token in tokenizer { //     println!("{:?}", token);
-    // }
-    let NS = minidom::NSChoice::Any;
     let root2: Element = xmldata.parse().unwrap();
-    let mut categories: Vec<Node> = Vec::new();
+
     // Important: _.children()_ ignores the texts. But _.nodes()_ returns those too. Here is an example:
     // <root>hello<child1 />this<child2 />is<child3 />ignored</root> If you want the text, you should use nodes!
     // If you only want the texts, and you want to ignore the elements, you can use: _.texts()_
+
     for child in root2.children() {
-        if child.is("category", NS) {
-            let pattern = child.get_child("pattern", NS).unwrap().text();
-            let template = child.get_child("template",  NS).unwrap().text();
-            categories.push(Node {
-                pattern,
-                template,
-            });
-        }
+        parse_element(child, &mut root, None);
+        // if child.is("category", NS) {
+        //     let pattern = child.get_child("pattern", NS).unwrap().text();
+        //     let template = child.get_child("template",  NS).unwrap().text();
+        //     categories.push(Node {
+        //         pattern,
+        //         template,
+        //     });
+        // }
     }
+
     println!("{:?}", categories);
-    // let mut reader = Reader::from_str(xmldata);
-    // reader.trim_text(true);
-    // If the closing tag has a trailing whitespace, we would've gotten an error
-    // reader.trim_markup_names_in_closing_tags(true);
-
-    // let mut count = 0;
-
-    // let mut txt = Vec::new();
-    // let mut buf = Vec::new();
-
-    // // The `Reader` does not implement `Iterator` because it outputs borrowed data (`Cow`s)
-    // let mut pattern_node = false;
-    // loop {
-    //     match reader.read_event(&mut buf) {
-    //         Ok(Event::Start(ref e)) => match e.name() {
-    //             b"category" => {
-    //                 println!("Found a new category!");
-    //             }
-    //             b"pattern" => {
-    //                 println!(
-    //                     "attributes values: {:?}",
-    //                     e.attributes().map(|a| a.unwrap().value).collect::<Vec<_>>()
-    //                 );
-    //                 pattern_node = true;
-    //             }
-    //             b"template" => count += 1,
-    //             _ => (),
-    //         },
-    //         Ok(Event::Text(e)) => {
-    //             txt.push(e.unescape_and_decode(&reader).unwrap());
-    //             if (pattern_node) {
-    //                 root.append(e.unescape_and_decode(&reader).unwrap());
-    //                 pattern_node = false;
-    //             }
-    //         }
-    //         Ok(Event::Eof) => break, // exits the loop when reaching end of file
-    //         Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
-    //         _ => (), // There are several other `Event`s we do not consider here
-    //     }
-    // }
-    // // if we don't keep a borrow elsewhere, we can clear the buffer to keep memory usage low
-    // buf.clear();
-
     // for each category
-    parse_category();
 }
 
-// parses a category and creates a correspondant element
-fn parse_category() {
-    // resolve the pattern
-    resolve_node();
+fn parse_element(node: &Element, categories: &mut Vec<Node>, topic: Option<&str>) {
+    let ns = minidom::NSChoice::Any;
+    let topic = match topic {
+        Some(s) => {
+            Some(String::from(s))
+        }
+        None => {None}
+    };
+    match node.name() {
+        "category" => {
+            let pattern = node.get_child("pattern", ns).unwrap().text().trim().to_owned();
+            let template = node.get_child("template", ns).cloned();
+           
+            
+            categories.push(Node { pattern, template, topic });
+        }
+        "topic" => {
+            for child in node.children() {
+                parse_element(child, categories, node.attr("name"));
+            }
+        }
+        _ => {
+            println!("Unknown tag: {}", node.name());
+            todo!(); // Right now the topic is here we have to call a function to handle the topic stuff
+        }
+    }
+}
+
+fn resolve_element(elem: &Element) -> String {
+    let result = String::new();
+    let mut iter = elem.nodes();
+    for node in iter{
+        result.push_str(&resolve_node(node));
+    }
+    result
 }
 
 // recursively replace all the values && return the string result
-fn resolve_node() {}
+fn resolve_node(node: &Node) -> String {
+    return "nope".to_string();
+}

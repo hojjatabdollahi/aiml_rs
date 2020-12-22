@@ -30,7 +30,7 @@ fn load_aiml(filename: PathBuf, root : &mut aiml::AIML) -> Result<(), Box<dyn Er
 
     aimlparser::parse(&content, root);
 
-    debug!("{}", content);
+    // debug!("{}", content);
 
     return Ok(());
 }
