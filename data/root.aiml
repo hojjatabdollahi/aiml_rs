@@ -5,11 +5,27 @@
         <pattern>HELLO</pattern>
         <template>
             Well, hello!
+	    <set name="that">How are you doing?</set>
         </template>
     </category>
     
     <category>
-        <pattern>WHAT ARE YOU</pattern>
+        <pattern>Doing well</pattern>
+        <template>
+	    <set name="that">What?</set>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>Doing well</pattern>
+	<that>How are you doing?</that>
+        <template>
+	    To be honest, I don't care how you are doing.
+        </template>
+    </category>
+
+    <category>
+        <pattern>HOW ARE YOU</pattern>
         <template>
             I'm a bot, silly!
         </template>
