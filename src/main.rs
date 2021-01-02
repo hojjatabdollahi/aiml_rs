@@ -1,7 +1,10 @@
 #[macro_use]
 extern crate log;
 extern crate env_logger;
-use libaiml::modaiml::{bot::Bot, loader};
+
+extern crate libaiml;
+use libaiml::logic::bot::Bot;
+use libaiml::storage::loader;
 
 // TODO: Use the wildcard functions in the code
 // How about <sets>? Well, I think the wildcard function

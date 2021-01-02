@@ -4,8 +4,8 @@ use std::fs::{canonicalize, File};
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
-use super::aiml;
-use super::parser;
+use crate::logic::parser;
+use crate::tags::aiml;
 
 fn load_aiml(filename: PathBuf, root: &mut aiml::AIML) -> Result<(), Box<dyn Error>> {
     debug!("About to load file: {:?}", filename);
@@ -73,9 +73,4 @@ pub fn load_aiml_file(aimlfile: &str) -> aiml::AIML {
     }
 
     return aiml;
-}
-
-#[test]
-fn it_works() {
-    assert_eq!(2 + 2, 4);
 }

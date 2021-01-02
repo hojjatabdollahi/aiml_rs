@@ -23,3 +23,15 @@ impl Userdata {
         self.vars.remove(key);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::logic::userdata::Userdata;
+    #[test]
+    fn test_userdata() {
+        let mut userdata = Userdata::new();
+        userdata.set("test", "testval");
+        assert_eq!(userdata.get("test"), Some("testval".to_string()));
+        assert!(userdata.get("test2").is_none());
+    }
+}

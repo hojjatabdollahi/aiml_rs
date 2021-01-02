@@ -4,9 +4,8 @@
 
 use minidom::Element;
 
-use super::aiml;
-use super::node;
-use aiml::AIML;
+use crate::tags::aiml::AIML;
+use crate::tags::node;
 
 // Just to save a little bit of memory
 // Also AIML files do not use namespaces

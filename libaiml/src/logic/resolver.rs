@@ -1,6 +1,6 @@
-use super::aiml::AIML;
-use crate::modaiml::userdata::Userdata;
-use crate::modaiml::utils::input_that_topic;
+use crate::logic::userdata::Userdata;
+use crate::tags::aiml::AIML;
+use crate::utils::functions::input_that_topic;
 use minidom::Element;
 
 /// This function finds the answer and also makes changes to the userdata
@@ -110,9 +110,9 @@ fn find(root: &AIML, input: &str, that: Option<String>, topic: Option<String>) -
 
 #[cfg(test)]
 mod tests {
-    use super::super::aiml::AIML;
-    use crate::modaiml::node::Node;
-    use crate::modaiml::userdata::Userdata;
+    use crate::logic::userdata::Userdata;
+    use crate::tags::aiml::AIML;
+    use crate::tags::node::Node;
     use minidom::Element;
 
     // This creates an AIML object so that we search in it

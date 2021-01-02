@@ -1,9 +1,8 @@
-use crate::modaiml::node::Node;
+use crate::tags::node::Node;
 use indextree;
 
 #[derive(Debug)]
 pub struct AIML {
-    //pub nodes: Vec<Node>,
     arena: indextree::Arena<Node>,
     root_id: indextree::NodeId,
 }
@@ -20,10 +19,8 @@ impl AIML {
     }
 
     pub fn insert(&mut self, new_node: Node) {
-        // This is literally the first node we are adding
         if self.root_id.children(&self.arena).count() == 0 {
             debug!("Adding the first child");
-
             let new_node_id = self.arena.new_node(new_node);
             self.root_id.append(new_node_id, &mut self.arena);
         } else {
@@ -56,16 +53,8 @@ impl AIML {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::modaiml::that::That;
-    use crate::modaiml::userdata::Userdata;
-    #[test]
-    fn test_userdata() {
-        let mut userdata = Userdata::new();
-        userdata.set("test", "testval");
-        assert_eq!(userdata.get("test"), Some("testval".to_string()));
-        assert!(userdata.get("test2").is_none());
-    }
+    use crate::tags::aiml::AIML;
+    use crate::tags::node::Node;
 
     #[test]
     fn test_aiml() {
@@ -75,12 +64,5 @@ mod tests {
         aiml.insert(Node::new("test".to_string(), None, None, None));
         aiml.insert(Node::new("test".to_string(), None, None, None));
         assert_eq!(aiml.iter().count(), 4);
-    }
-
-    #[test]
-    fn test_that() {
-        assert_eq!(That::new("*"), That::new("*"));
-        assert!(That::new("Hi") > That::new("*"));
-        assert!(That::new("*") < That::new("Hi"));
     }
 }

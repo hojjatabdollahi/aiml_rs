@@ -1,6 +1,6 @@
-use super::aiml::AIML;
-use super::resolver::resolve;
-use super::userdata::Userdata;
+use crate::logic::resolver::resolve;
+use crate::logic::userdata::Userdata;
+use crate::tags::aiml::AIML;
 pub struct Bot {
     userdata: Userdata,
 }

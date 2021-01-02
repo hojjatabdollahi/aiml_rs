@@ -10,7 +10,7 @@ fn is_match_vec(input: Vec<String>, pattern: Vec<String>) -> bool {
     // I can not use arrays (because we don't know the length)
     // So, I should use a Vec and I will make it look like an array
     //
-    debug!("input: {:?}, pattern: {:?}", input, pattern);
+    //debug!("input: {:?}, pattern: {:?}", input, pattern);
 
     let pattern_size = pattern.len() + 1;
     let input_size = input.len() + 1;
@@ -34,7 +34,7 @@ fn is_match_vec(input: Vec<String>, pattern: Vec<String>) -> bool {
 
     for i in 1..input_size {
         for j in 1..pattern_size {
-            debug!("pattern: {}, input: {}", pattern[j - 1], input[i - 1]);
+            //debug!("pattern: {}, input: {}", pattern[j - 1], input[i - 1]);
             if pattern[j - 1] == input[i - 1] {
                 t[i][j] = t[i - 1][j - 1];
             } else if pattern[j - 1] == "*" {
@@ -73,9 +73,36 @@ fn normalize_pattern(pattern: &str) -> Vec<String> {
     res
 }
 
+/// Append the <input>, <that> and <topic> for the matching
+/// # Examples
+///
+/// ```
+/// # use libaiml::modaiml::aiml;
+/// assert_eq!(
+///     aiml::input_that_topic("a", Some("b"), Some("c")),
+///     "a <that> b <topic> c"
+/// );
+/// assert_eq!(aiml::input_that_topic("a", None, None),"a <that> * <topic> *");
+/// ```
+pub fn input_that_topic(input: &str, that: Option<&str>, topic: Option<&str>) -> String {
+    let mut result = String::new();
+    result.push_str(input.trim());
+    result.push_str(" <that> ");
+    match that {
+        Some(txt) => result.push_str(txt.trim()),
+        None => result.push_str("*"),
+    }
+    result.push_str(" <topic> ");
+    match topic {
+        Some(txt) => result.push_str(txt.trim()),
+        None => result.push_str("*"),
+    }
+    result.to_lowercase()
+}
+
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::utils::functions::{is_match, normalize_input, normalize_pattern};
     #[test]
     fn test_is_match() {
         assert!(is_match("Hello friend", "Hello *"));
@@ -108,31 +135,4 @@ mod tests {
             ]
         );
     }
-}
-
-/// Append the <input>, <that> and <topic> for the matching
-/// # Examples
-///
-/// ```
-/// # use libaiml::modaiml::aiml;
-/// assert_eq!(
-///     aiml::input_that_topic("a", Some("b"), Some("c")),
-///     "a <that> b <topic> c"
-/// );
-/// assert_eq!(aiml::input_that_topic("a", None, None),"a <that> * <topic> *");
-/// ```
-pub fn input_that_topic(input: &str, that: Option<&str>, topic: Option<&str>) -> String {
-    let mut result = String::new();
-    result.push_str(input.trim());
-    result.push_str(" <that> ");
-    match that {
-        Some(txt) => result.push_str(txt.trim()),
-        None => result.push_str("*"),
-    }
-    result.push_str(" <topic> ");
-    match topic {
-        Some(txt) => result.push_str(txt.trim()),
-        None => result.push_str("*"),
-    }
-    result.to_lowercase()
 }

@@ -50,3 +50,14 @@ impl PartialEq for That {
 }
 
 impl Eq for That {}
+
+#[cfg(test)]
+mod tests {
+    use crate::tags::that::That;
+    #[test]
+    fn test_that() {
+        assert_eq!(That::new("*"), That::new("*"));
+        assert!(That::new("Hi") > That::new("*"));
+        assert!(That::new("*") < That::new("Hi"));
+    }
+}

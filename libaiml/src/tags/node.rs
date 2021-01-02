@@ -1,4 +1,4 @@
-use crate::modaiml::utils::{input_that_topic, is_match};
+use crate::utils::functions::{input_that_topic, is_match};
 use minidom::Element;
 /// This struct is going to map exactly the content of the aiml _category_ node.
 #[derive(Debug, Clone)]
