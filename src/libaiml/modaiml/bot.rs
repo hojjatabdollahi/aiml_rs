@@ -1,5 +1,6 @@
-use super::aiml::{Userdata, AIML};
+use super::aiml::AIML;
 use super::resolver::resolve;
+use super::userdata::Userdata;
 pub struct Bot {
     userdata: Userdata,
 }

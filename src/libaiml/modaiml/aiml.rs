@@ -1,118 +1,86 @@
+use crate::modaiml::node::Node;
 use indextree;
-use minidom::Element;
-use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct AIML {
     //pub nodes: Vec<Node>,
-    pub arena: indextree::Arena<Node>,
-    current_node: usize,
-}
-
-/// This struct is going to map exactly the content of the aiml _category_ node.
-#[derive(Debug, Clone)]
-pub struct Node {
-    path: String,
-    pub pattern: String,
-    pub that: Option<String>,
-    pub topic: Option<String>,
-    pub template: Option<Element>,
-}
-
-impl Node {
-    pub fn new(
-        pattern: String,
-        that: Option<String>,
-        topic: Option<String>,
-        template: Option<Element>,
-    ) -> Self {
-        Node {
-            path: input_that_topic(&pattern, that.as_deref(), topic.as_deref()),
-            pattern,
-            that,
-            topic,
-            template,
-        }
-    }
-
-    pub fn is_match(&self, input: &str) -> bool {
-        trace!("comparing {:?} to {:?}", self.path, input);
-        self.path == input
-    }
+    arena: indextree::Arena<Node>,
+    root_id: indextree::NodeId,
 }
 
 impl AIML {
     pub fn new() -> Self {
-        Self {
-            arena: indextree::Arena::new(),
-            current_node: 0,
-        }
+        let mut arena = indextree::Arena::new();
+        let root_id = arena.new_node(Node::new("root".to_string(), None, None, None));
+        Self { arena, root_id }
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &indextree::Node<Node>> {
         self.arena.iter()
     }
-}
 
-/// Append the <input>, <that> and <topic> for the matching
-/// # Examples
-///
-/// ```
-/// # use libaiml::modaiml::aiml;
-/// assert_eq!(
-///     aiml::input_that_topic("a", Some("b"), Some("c")),
-///     "a <that> b <topic> c"
-/// );
-/// assert_eq!(aiml::input_that_topic("a", None, None),"a <that> * <topic> *");
-/// ```
-pub fn input_that_topic(input: &str, that: Option<&str>, topic: Option<&str>) -> String {
-    let mut result = String::new();
-    result.push_str(input.trim());
-    result.push_str(" <that> ");
-    match that {
-        Some(txt) => result.push_str(txt.trim()),
-        None => result.push_str("*"),
-    }
-    result.push_str(" <topic> ");
-    match topic {
-        Some(txt) => result.push_str(txt.trim()),
-        None => result.push_str("*"),
-    }
-    result.to_lowercase()
-}
+    pub fn insert(&mut self, new_node: Node) {
+        // This is literally the first node we are adding
+        if self.root_id.children(&self.arena).count() == 0 {
+            debug!("Adding the first child");
 
-pub struct Userdata {
-    vars: HashMap<String, String>,
-}
-
-impl Userdata {
-    pub fn new() -> Self {
-        Userdata {
-            vars: HashMap::new(),
+            let new_node_id = self.arena.new_node(new_node);
+            self.root_id.append(new_node_id, &mut self.arena);
+        } else {
+            let first_child = self.arena.get(self.root_id).unwrap().first_child().unwrap();
+            let mut best_child = self.root_id;
+            //TODO: Currently we only check the <that>
+            // Next step is to check the pattern for order
+            // The step before that is to insert in the topic
+            // So, the order is: topic, then that, and then pattern
+            // ex: if there is a topic, go find it and insert into children
+            // Now, when inserting, check the that, if that is bigger, then insert (probably
+            // becasue there is nothing else with a that
+            // but if that is equal, then compare pattern
+            // if pattern is bigger insert, if smaller then move forward.
+            // the reason that we didn't test "smaller" for that is either, we have a that or we
+            // don't. I don't think there is a third option at this point.
+            for child in first_child.following_siblings(&self.arena) {
+                if !self.arena.get(child).unwrap().get().is_topic {
+                    if new_node.that > self.arena.get(child).unwrap().get().that {
+                        best_child = child;
+                        break;
+                    }
+                }
+            }
+            let new_node_id = self.arena.new_node(new_node);
+            best_child.insert_after(new_node_id, &mut self.arena);
         }
-    }
-
-    pub fn get(&self, key: &str) -> Option<String> {
-        self.vars.get(key).cloned()
-    }
-
-    pub fn set(&mut self, key: &str, value: &str) {
-        self.vars.insert(key.to_string(), value.to_string());
-    }
-
-    pub fn remove(&mut self, key: &str) {
-        self.vars.remove(key);
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::modaiml::that::That;
+    use crate::modaiml::userdata::Userdata;
     #[test]
     fn test_userdata() {
         let mut userdata = Userdata::new();
         userdata.set("test", "testval");
         assert_eq!(userdata.get("test"), Some("testval".to_string()));
         assert!(userdata.get("test2").is_none());
+    }
+
+    #[test]
+    fn test_aiml() {
+        let mut aiml = AIML::new();
+        assert_eq!(aiml.iter().count(), 1);
+        aiml.insert(Node::new("test".to_string(), None, None, None));
+        aiml.insert(Node::new("test".to_string(), None, None, None));
+        aiml.insert(Node::new("test".to_string(), None, None, None));
+        assert_eq!(aiml.iter().count(), 4);
+    }
+
+    #[test]
+    fn test_that() {
+        assert_eq!(That::new("*"), That::new("*"));
+        assert!(That::new("Hi") > That::new("*"));
+        assert!(That::new("*") < That::new("Hi"));
     }
 }

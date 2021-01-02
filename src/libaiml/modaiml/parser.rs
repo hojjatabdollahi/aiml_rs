@@ -5,6 +5,7 @@
 use minidom::Element;
 
 use super::aiml;
+use super::node;
 use aiml::AIML;
 
 // Just to save a little bit of memory
@@ -41,9 +42,15 @@ fn parse_element(node: &Element, root: &mut AIML, topic: Option<&str>) {
                 None => None,
             };
             let template = node.get_child("template", NS).cloned();
-            root.arena
-                .new_node(aiml::Node::new(pattern, that, topic, template));
+            //TODO: I should insert the nodes in order, so
+            // When it is being inserted it should keep the order
+            // with the siblings
+            root.insert(node::Node::new(pattern, that, topic, template));
         }
+        //TODO: I'm going to create a node in the arena and pass that as
+        // the root for all the stuff in that topic.
+        // The thing is, I should first check that that topic
+        // doesn't already exist in the arena
         "topic" => {
             for child in node.children() {
                 parse_element(child, root, node.attr("name"));

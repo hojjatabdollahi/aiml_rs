@@ -1,4 +1,6 @@
-use super::aiml::{Userdata, AIML};
+use super::aiml::AIML;
+use crate::modaiml::userdata::Userdata;
+use crate::modaiml::utils::input_that_topic;
 use minidom::Element;
 
 /// This function finds the answer and also makes changes to the userdata
@@ -9,6 +11,9 @@ pub fn resolve(root: &AIML, input: &str, userdata: &mut Userdata) -> String {
     match find_with_userdata(root, input, userdata) {
         Some(res) => {
             debug!("I found this answer: {:?}", res);
+            //TODO: I don't need this. I should alaways set something as then
+            // that tag, if there is no category with that question, then
+            // It will default to *
             let mut set_that = false;
             for child in res.nodes() {
                 //trace!("{:?}", child);
@@ -92,7 +97,7 @@ fn find_with_userdata(root: &AIML, input: &str, userdata: &Userdata) -> Option<E
 ///
 /// Check the find() test function in this file for an example.
 fn find(root: &AIML, input: &str, that: Option<String>, topic: Option<String>) -> Option<Element> {
-    let input_path = super::aiml::input_that_topic(input, that.as_deref(), topic.as_deref());
+    let input_path = input_that_topic(input, that.as_deref(), topic.as_deref());
     let mut res: Option<Element> = None;
     for node in root.iter() {
         if node.get().is_match(&input_path) {
@@ -105,13 +110,15 @@ fn find(root: &AIML, input: &str, that: Option<String>, topic: Option<String>) -
 
 #[cfg(test)]
 mod tests {
-    use super::super::aiml::{Node, Userdata, AIML};
+    use super::super::aiml::AIML;
+    use crate::modaiml::node::Node;
+    use crate::modaiml::userdata::Userdata;
     use minidom::Element;
 
     // This creates an AIML object so that we search in it
     fn setup() -> (AIML, Userdata) {
         let mut aiml = AIML::new();
-        aiml.arena.new_node(Node::new(
+        aiml.insert(Node::new(
             "Hi".to_string(),
             None,
             None,
