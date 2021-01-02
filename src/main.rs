@@ -21,9 +21,12 @@ fn main() {
 
     ////let aiml = loader::load_aiml_set("data");
     let aiml = loader::load_aiml_file("data/test/test.aiml");
-    let mut bot = Bot::new();
-    info!("Q: Hello, A: {}", bot.query("HELLO", &aiml));
-    info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
+    for cat in aiml.iter() {
+        debug!("{:?}", cat);
+    }
+    //let mut bot = Bot::new();
+    //info!("Q: Hello, A: {}", bot.query("HELLO", &aiml));
+    //info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
     //info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
     //info!("Q: What what?, A: {}", bot.query("WHAT WHAT", &aiml));
     //info!("q: how are you, a: {}", bot.query("HOW ARE YOU", &aiml));
