@@ -20,10 +20,11 @@ fn main() {
     env_logger::init();
 
     ////let aiml = loader::load_aiml_set("data");
-    let aiml = loader::load_aiml_file("data/test/test.aiml");
-    for cat in aiml.iter() {
-        debug!("{:?}", cat);
-    }
+    let aiml = loader::load_aiml_file("data/test/test_topics.aiml");
+    //for cat in aiml.iter() {
+    //debug!("{:?}", cat);
+    //}
+    aiml.tree(true);
     //let mut bot = Bot::new();
     //info!("Q: Hello, A: {}", bot.query("HELLO", &aiml));
     //info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));

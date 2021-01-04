@@ -1,0 +1,112 @@
+<aiml version="1.0.1" encoding="UTF-8">
+        <category>
+            <pattern>YES</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+
+        <category>
+            <pattern>YES</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern>YES</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+
+        <category>
+            <pattern>YES</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+    <topic name="science">
+
+        <category>
+            <pattern>YES</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+        <category>
+            <pattern>YES</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+    </topic>
+
+    <topic name="adventure">
+
+        <category>
+            <pattern>YES</pattern>
+            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <template>
+                <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
+                <oob>
+                    <robot></robot>
+                </oob>
+            </template>
+        </category>
+
+
+    <category>
+        <pattern>LETS DO AN ADVENTURE</pattern>
+        <template>
+            <think><set name="topic">adventure</set></think>
+            There's nothing like a good adventure to liven things up!
+            <set name="most recent dialogue question">Have you ever read The Adventures of Tom Sawyer?</set>
+            <oob>
+                <robot></robot>
+            </oob>
+        </template>
+    </category>
+
+    <category>
+        <pattern>LETS DO AN ADVENTURE</pattern>
+        <template>
+            <think><set name="topic">adventure</set></think>
+            There's nothing like a good adventure to liven things up!
+            <set name="most recent dialogue question">Have you ever read The Adventures of Tom Sawyer?</set>
+            <oob>
+                <robot></robot>
+            </oob>
+        </template>
+    </category>
+    </topic>
+    
+</aiml>
