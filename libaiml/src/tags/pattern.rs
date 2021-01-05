@@ -1,23 +1,23 @@
 use std::cmp::{Ord, Ordering};
 #[derive(Debug, Clone)]
-pub struct That {
-    that: String,
+pub struct Pattern {
+    value: String,
 }
 
-impl That {
+impl Pattern {
     pub fn new(str: &str) -> Self {
         Self {
-            that: str.to_string(),
+            value: str.to_string(),
         }
     }
 }
 
-impl Ord for That {
+impl Ord for Pattern {
     fn cmp(&self, other: &Self) -> Ordering {
-        if self.that == other.that {
+        if self.value == other.value {
             Ordering::Equal
-        } else if self.that == "*" {
-            if other.that == "*" {
+        } else if self.value == "*" {
+            if other.value == "*" {
                 // self == *, other == *
                 Ordering::Equal
             } else {
@@ -26,7 +26,7 @@ impl Ord for That {
             }
         } else {
             // self == word
-            if other.that == "*" {
+            if other.value == "*" {
                 // self == word, other == *
                 Ordering::Greater
             } else {
@@ -37,27 +37,27 @@ impl Ord for That {
     }
 }
 
-impl PartialOrd for That {
+impl PartialOrd for Pattern {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-impl PartialEq for That {
+impl PartialEq for Pattern {
     fn eq(&self, other: &Self) -> bool {
-        (self.that == "*" && other.that == "*") || (self.that != "*" && other.that != "*")
+        (self.value == "*" && other.value == "*") || (self.value != "*" && other.value != "*")
     }
 }
 
-impl Eq for That {}
+impl Eq for Pattern {}
 
 #[cfg(test)]
 mod tests {
-    use crate::tags::that::That;
+    use crate::tags::pattern::Pattern;
     #[test]
     fn test_that() {
-        assert_eq!(That::new("*"), That::new("*"));
-        assert!(That::new("Hi") > That::new("*"));
-        assert!(That::new("*") < That::new("Hi"));
+        assert_eq!(Pattern::new("*"), Pattern::new("*"));
+        assert!(Pattern::new("Hi") > Pattern::new("*"));
+        assert!(Pattern::new("*") < Pattern::new("Hi"));
     }
 }

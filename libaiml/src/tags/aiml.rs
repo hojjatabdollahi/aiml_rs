@@ -25,7 +25,7 @@ impl AIML {
     }
 
     /// This function will traverse the arena and print out
-    /// all the patterns
+    /// all the categories and topics in a tree form.
     /// It will change indentation when going deeper in a branch
     pub fn tree(&self, verbose: bool) {
         let root_count = self.root_id.children(&self.arena).count();
@@ -115,32 +115,42 @@ impl AIML {
                 let mut best_child = self.root_id;
                 //TODO: Currently we only check the <that>
                 // Next step is to check the pattern for order
-                // The step before that is to insert in the topic
                 // So, the order is: topic, then that, and then pattern
-                // ex: if there is a topic, go find it and insert into children
-                // Now, when inserting, check the that, if that is bigger, then insert (probably
-                // becasue there is nothing else with a that
-                // but if that is equal, then compare pattern
-                // if pattern is bigger insert, if smaller then move forward.
-                // the reason that we didn't test "smaller" for that is either, we have a that or we
+                // the reason that we didn't test "smaller" for that
+                // is either, we have a that or we
                 // don't. I don't think there is a third option at this point.
+                let mut bigger = false;
                 for child in first_child.following_siblings(&self.arena) {
-                    if !self.arena.get(child).unwrap().get().is_topic {
-                        // TODO: I change > to >= because it was not
-                        // inserting a second catergory in the root
-                        // I had two categories in the example file, but
-                        // the `tree` function was printing only one category
-                        // I didn't look any deeper but it looks like that there
-                        // was an issue here. Since I'm changing the comparison function
-                        // and moving it to a dedicated function, I don't care.
-                        if new_node.that >= self.arena.get(child).unwrap().get().that {
+                    // TODO: I change > to >= because it was not
+                    // inserting a second catergory in the root
+                    // I had two categories in the example file, but
+                    // the `tree` function was printing only one category
+                    // I didn't look any deeper but it looks like that there
+                    // was an issue here. Since I'm changing the comparison function
+                    // and moving it to a dedicated function, I don't care.
+
+                    if new_node.that > self.arena.get(child).unwrap().get().that {
+                        best_child = child;
+                        bigger = true;
+                        break;
+                    } else if new_node.that == self.arena.get(child).unwrap().get().that {
+                        //TODO: compare pattern
+                        if new_node.pattern > self.arena.get(child).unwrap().get().pattern {
                             best_child = child;
+                            bigger = true;
                             break;
                         }
                     }
+                    best_child = child;
                 }
-                let new_node_id = self.arena.new_node(new_node);
-                best_child.insert_after(new_node_id, &mut self.arena);
+                //
+                if bigger {
+                    let new_node_id = self.arena.new_node(new_node);
+                    best_child.insert_before(new_node_id, &mut self.arena);
+                } else {
+                    let new_node_id = self.arena.new_node(new_node);
+                    best_child.insert_after(new_node_id, &mut self.arena);
+                }
             }
         }
     }
