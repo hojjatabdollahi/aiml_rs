@@ -77,12 +77,12 @@ fn normalize_pattern(pattern: &str) -> Vec<String> {
 /// # Examples
 ///
 /// ```
-/// # use libaiml::modaiml::aiml;
+/// # use libaiml::utils::functions::input_that_topic;
 /// assert_eq!(
-///     aiml::input_that_topic("a", Some("b"), Some("c")),
-///     "a <that> b <topic> c"
+///     input_that_topic("a", Some("b"), Some("c")),
+///     "<topic> c <that> b <pattern> a"
 /// );
-/// assert_eq!(aiml::input_that_topic("a", None, None),"a <that> * <topic> *");
+/// assert_eq!(input_that_topic("a", None, None),"<topic> * <that> * <pattern> a");
 /// ```
 pub fn input_that_topic(input: &str, that: Option<&str>, topic: Option<&str>) -> String {
     let mut result = String::new();

@@ -4,7 +4,7 @@ extern crate env_logger;
 pub mod logic;
 pub mod storage;
 mod tags;
-mod utils;
+pub mod utils;
 
 #[cfg(test)]
 mod tests {
