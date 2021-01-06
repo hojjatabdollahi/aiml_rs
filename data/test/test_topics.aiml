@@ -1,7 +1,6 @@
 <aiml version="1.0.1" encoding="UTF-8">
         <category>
-            <pattern>YES</pattern>
-            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <pattern>HELLO</pattern>
             <template>
                 <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
                 <oob>
@@ -12,7 +11,7 @@
 
 
         <category>
-            <pattern>YES</pattern>
+            <pattern>ABOUT THAT</pattern>
             <that>Have you ever read The Adventures of Tom Sawyer?</that>
             <template>
                 <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
@@ -24,7 +23,7 @@
 
         <category>
             <pattern>YES</pattern>
-            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <that>Hi</that>
             <template>
                 <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
                 <oob>
@@ -35,7 +34,7 @@
 
 
         <category>
-            <pattern>YES</pattern>
+            <pattern>ABORT</pattern>
             <that>Have you ever read The Adventures of Tom Sawyer?</that>
             <template>
                 <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
@@ -48,8 +47,8 @@
     <topic name="science">
 
         <category>
-            <pattern>YES</pattern>
-            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <pattern>TWO</pattern>
+            <that>*</that>
             <template>
                 <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
                 <oob>
@@ -59,7 +58,7 @@
         </category>
 
         <category>
-            <pattern>YES</pattern>
+            <pattern>ONE</pattern>
             <that>Have you ever read The Adventures of Tom Sawyer?</that>
             <template>
                 <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
@@ -73,8 +72,8 @@
     <topic name="adventure">
 
         <category>
-            <pattern>YES</pattern>
-            <that>Have you ever read The Adventures of Tom Sawyer?</that>
+            <pattern>*</pattern>
+            <that>Hello</that>
             <template>
                 <set name="most recent dialogue question">What did you think of all the mischief Tom got into?</set>
                 <oob>
@@ -85,7 +84,8 @@
 
 
     <category>
-        <pattern>LETS DO AN ADVENTURE</pattern>
+        <pattern>TWO</pattern>
+            <that>Hello</that>
         <template>
             <think><set name="topic">adventure</set></think>
             There's nothing like a good adventure to liven things up!
@@ -97,7 +97,7 @@
     </category>
 
     <category>
-        <pattern>LETS DO AN ADVENTURE</pattern>
+        <pattern>LETS DO *</pattern>
         <template>
             <think><set name="topic">adventure</set></think>
             There's nothing like a good adventure to liven things up!

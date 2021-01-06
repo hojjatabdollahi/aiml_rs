@@ -3,9 +3,9 @@ use indextree;
 
 #[derive(Debug)]
 pub struct AIML {
-    arena: indextree::Arena<Node>,
-    root_id: indextree::NodeId,
-    topics_root_id: indextree::NodeId,
+    pub arena: indextree::Arena<Node>,
+    pub root_id: indextree::NodeId,
+    pub topics_root_id: indextree::NodeId,
 }
 
 impl AIML {
@@ -31,8 +31,8 @@ impl AIML {
         let root_count = self.root_id.children(&self.arena).count();
         println!("No topic (count: {})", root_count);
         if verbose {
-            for _ in self.root_id.children(&self.arena) {
-                println!("|- c");
+            for child in self.root_id.children(&self.arena) {
+                println!("|- {}", self.arena.get(child).unwrap().get().pattern);
             }
         }
         println!("|");
@@ -44,13 +44,72 @@ impl AIML {
                 topic_count
             );
             if verbose {
-                for _ in topic.children(&self.arena) {
-                    println!("   |- c");
+                for child in topic.children(&self.arena) {
+                    println!("   |- {}", self.arena.get(child).unwrap().get().pattern);
                 }
             }
         }
     }
 
+    pub fn find_topic(&self, topic: &str) -> Option<indextree::NodeId> {
+        self.topics_root_id
+            .children(&self.arena)
+            .find(|&x| self.arena.get(x).unwrap().get().topic.clone().unwrap() == topic)
+    }
+
+    /// This function appends a node to a nodeID and makes sure the order is correct
+    fn insert_node(&mut self, new_node: Node, root: indextree::NodeId) {
+        // The node doesn't have a topic
+        debug!("The node doesn't have a topic");
+        if root.children(&self.arena).count() == 0 {
+            debug!("Adding the first node in this root (could be a topic too)");
+            let new_node_id = self.arena.new_node(new_node);
+            root.append(new_node_id, &mut self.arena);
+        } else {
+            debug!("adding another node to this root (or topic)");
+            let first_child = self.arena.get(root).unwrap().first_child().unwrap();
+            let mut best_child = root;
+            //TODO: Currently we only check the <that>
+            // Next step is to check the pattern for order
+            // So, the order is: topic, then that, and then pattern
+            // the reason that we didn't test "smaller" for that
+            // is either, we have a that or we
+            // don't. I don't think there is a third option at this point.
+            let mut bigger = false;
+            for child in first_child.following_siblings(&self.arena) {
+                // TODO: I change > to >= because it was not
+                // inserting a second catergory in the root
+                // I had two categories in the example file, but
+                // the `tree` function was printing only one category
+                // I didn't look any deeper but it looks like that there
+                // was an issue here. Since I'm changing the comparison function
+                // and moving it to a dedicated function, I don't care.
+
+                if new_node.that > self.arena.get(child).unwrap().get().that {
+                    best_child = child;
+                    bigger = true;
+                    break;
+                } else if new_node.that == self.arena.get(child).unwrap().get().that {
+                    //TODO: compare pattern
+                    if new_node.pattern > self.arena.get(child).unwrap().get().pattern {
+                        best_child = child;
+                        bigger = true;
+                        break;
+                    }
+                }
+                best_child = child;
+            }
+            //
+            if bigger {
+                let new_node_id = self.arena.new_node(new_node);
+                best_child.insert_before(new_node_id, &mut self.arena);
+            } else {
+                let new_node_id = self.arena.new_node(new_node);
+                best_child.insert_after(new_node_id, &mut self.arena);
+            }
+        }
+    }
+    /// This function inserts a node into the arena
     pub fn insert(&mut self, new_node: Node) {
         // TODO: we are adding nodes with topics now, but
         // we are not inserting them in order
@@ -86,9 +145,10 @@ impl AIML {
                     // topic already exists
                     Some(topic_id) => {
                         debug!("the topic already exists");
-                        self.topics_root_id.append(topic_id, &mut self.arena);
-                        let new_node_id = self.arena.new_node(new_node);
-                        topic_id.append(new_node_id, &mut self.arena);
+                        //self.topics_root_id.append(topic_id, &mut self.arena);
+                        //let new_node_id = self.arena.new_node(new_node);
+                        //topic_id.append(new_node_id, &mut self.arena);
+                        self.insert_node(new_node, topic_id);
                     }
                     // new topic
                     None => {
@@ -103,55 +163,8 @@ impl AIML {
                 };
             }
         } else {
-            // The node doesn't have a topic
-            debug!("The node doesn't have a topic");
-            if self.root_id.children(&self.arena).count() == 0 {
-                debug!("Adding the first node without a topic");
-                let new_node_id = self.arena.new_node(new_node);
-                self.root_id.append(new_node_id, &mut self.arena);
-            } else {
-                debug!("adding not-the-first node without a topic");
-                let first_child = self.arena.get(self.root_id).unwrap().first_child().unwrap();
-                let mut best_child = self.root_id;
-                //TODO: Currently we only check the <that>
-                // Next step is to check the pattern for order
-                // So, the order is: topic, then that, and then pattern
-                // the reason that we didn't test "smaller" for that
-                // is either, we have a that or we
-                // don't. I don't think there is a third option at this point.
-                let mut bigger = false;
-                for child in first_child.following_siblings(&self.arena) {
-                    // TODO: I change > to >= because it was not
-                    // inserting a second catergory in the root
-                    // I had two categories in the example file, but
-                    // the `tree` function was printing only one category
-                    // I didn't look any deeper but it looks like that there
-                    // was an issue here. Since I'm changing the comparison function
-                    // and moving it to a dedicated function, I don't care.
-
-                    if new_node.that > self.arena.get(child).unwrap().get().that {
-                        best_child = child;
-                        bigger = true;
-                        break;
-                    } else if new_node.that == self.arena.get(child).unwrap().get().that {
-                        //TODO: compare pattern
-                        if new_node.pattern > self.arena.get(child).unwrap().get().pattern {
-                            best_child = child;
-                            bigger = true;
-                            break;
-                        }
-                    }
-                    best_child = child;
-                }
-                //
-                if bigger {
-                    let new_node_id = self.arena.new_node(new_node);
-                    best_child.insert_before(new_node_id, &mut self.arena);
-                } else {
-                    let new_node_id = self.arena.new_node(new_node);
-                    best_child.insert_after(new_node_id, &mut self.arena);
-                }
-            }
+            debug!("Node doesn't have a topic");
+            self.insert_node(new_node, self.root_id);
         }
     }
 }

@@ -1,7 +1,7 @@
 use std::cmp::{Ord, Ordering};
 #[derive(Debug, Clone)]
 pub struct Pattern {
-    value: String,
+    pub value: String,
 }
 
 impl Pattern {
@@ -13,26 +13,73 @@ impl Pattern {
 }
 
 impl Ord for Pattern {
+    //fn cmp(&self, other: &Self) -> Ordering {
+    //if self.value == other.value {
+    //Ordering::Equal
+    //} else if self.value == "*" {
+    //if other.value == "*" {
+    //// self == *, other == *
+    //Ordering::Equal
+    //} else {
+    //// self == *, other == word
+    //Ordering::Less
+    //}
+    //} else {
+    //// self == word
+    //if other.value == "*" {
+    //// self == word, other == *
+    //Ordering::Greater
+    //} else {
+    //// self == word, other == word
+    //Ordering::Equal
+    //}
+    //}
+    //}
+
     fn cmp(&self, other: &Self) -> Ordering {
         if self.value == other.value {
             Ordering::Equal
-        } else if self.value == "*" {
-            if other.value == "*" {
-                // self == *, other == *
-                Ordering::Equal
-            } else {
-                // self == *, other == word
-                Ordering::Less
-            }
         } else {
-            // self == word
-            if other.value == "*" {
-                // self == word, other == *
-                Ordering::Greater
-            } else {
-                // self == word, other == word
-                Ordering::Equal
+            let mut a = self.value.split_whitespace();
+            let mut b = other.value.split_whitespace();
+            let mut res = std::cmp::Ordering::Equal;
+            loop {
+                match a.next() {
+                    Some(v) => {
+                        match b.next() {
+                            Some(v2) => {
+                                if v == "*" && v2 != "*" {
+                                    res = std::cmp::Ordering::Less;
+                                    break;
+                                } else if v != "*" && v2 == "*" {
+                                    res = std::cmp::Ordering::Greater;
+                                    break;
+                                }
+                            }
+                            None => {
+                                if v == "*" {
+                                    res = std::cmp::Ordering::Less;
+                                }
+                                break;
+                            }
+                        };
+                    }
+                    None => {
+                        match b.next() {
+                            Some(v2) => {
+                                if v2 == "*" {
+                                    res = std::cmp::Ordering::Greater;
+                                }
+                                break;
+                            }
+                            None => {
+                                break;
+                            }
+                        };
+                    }
+                }
             }
+            res
         }
     }
 }
@@ -51,13 +98,22 @@ impl PartialEq for Pattern {
 
 impl Eq for Pattern {}
 
+impl std::fmt::Display for Pattern {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<Pattern>: {}", self.value)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::tags::pattern::Pattern;
     #[test]
-    fn test_that() {
+    fn test_pattern() {
         assert_eq!(Pattern::new("*"), Pattern::new("*"));
         assert!(Pattern::new("Hi") > Pattern::new("*"));
         assert!(Pattern::new("*") < Pattern::new("Hi"));
+        assert!(Pattern::new("hello *") < Pattern::new("hello"));
+        assert!(Pattern::new("hello") > Pattern::new("hello *"));
+        assert!(Pattern::new("hello") > Pattern::new("* hello *"));
     }
 }

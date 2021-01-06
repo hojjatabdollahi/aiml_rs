@@ -1,23 +1,23 @@
 use std::cmp::{Ord, Ordering};
 #[derive(Debug, Clone)]
 pub struct That {
-    that: String,
+    pub value: String,
 }
 
 impl That {
     pub fn new(str: &str) -> Self {
         Self {
-            that: str.to_string(),
+            value: str.to_string(),
         }
     }
 }
 
 impl Ord for That {
     fn cmp(&self, other: &Self) -> Ordering {
-        if self.that == other.that {
+        if self.value == other.value {
             Ordering::Equal
-        } else if self.that == "*" {
-            if other.that == "*" {
+        } else if self.value == "*" {
+            if other.value == "*" {
                 // self == *, other == *
                 Ordering::Equal
             } else {
@@ -26,7 +26,7 @@ impl Ord for That {
             }
         } else {
             // self == word
-            if other.that == "*" {
+            if other.value == "*" {
                 // self == word, other == *
                 Ordering::Greater
             } else {
@@ -45,7 +45,7 @@ impl PartialOrd for That {
 
 impl PartialEq for That {
     fn eq(&self, other: &Self) -> bool {
-        (self.that == "*" && other.that == "*") || (self.that != "*" && other.that != "*")
+        (self.value == "*" && other.value == "*") || (self.value != "*" && other.value != "*")
     }
 }
 

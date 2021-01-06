@@ -97,12 +97,42 @@ fn find_with_userdata(root: &AIML, input: &str, userdata: &Userdata) -> Option<E
 ///
 /// Check the find() test function in this file for an example.
 fn find(root: &AIML, input: &str, that: Option<String>, topic: Option<String>) -> Option<Element> {
-    let input_path = input_that_topic(input, that.as_deref(), topic.as_deref());
+    let mut id = root.root_id;
     let mut res: Option<Element> = None;
-    for node in root.iter() {
-        if node.get().is_match(&input_path) {
-            res = node.get().template.clone();
-            break;
+    match topic {
+        Some(t) => {
+            id = root.find_topic(&t).unwrap();
+        }
+        None => {}
+    };
+
+    for child in id.children(&root.arena) {
+        let node = root.arena.get(child).unwrap().get();
+        let mut ok = false;
+        match &that {
+            Some(t) => {
+                match &node.that {
+                    Some(T) => {
+                        debug!("<That> comparing {}, {}", t, T.value);
+                        if t == &T.value {
+                            ok = true;
+                        }
+                    }
+                    None => {}
+                };
+            }
+            None => match &node.that {
+                Some(_) => {}
+                None => {
+                    ok = true;
+                }
+            },
+        }
+        if ok {
+            if node.is_match(input) {
+                res = node.template.clone();
+                break;
+            }
         }
     }
     res
@@ -120,18 +150,21 @@ mod tests {
         let mut aiml = AIML::new();
         aiml.insert(Node::new(
             "Hi".to_string(),
-            None,
+            Some("hello".to_string()),
             None,
             Some(Element::builder("hello").build()),
         ));
-        let userdata = Userdata::new();
+        let mut userdata = Userdata::new();
+        userdata.set("most recent dialogue question", "hello");
         (aiml, userdata)
     }
 
     #[test]
     fn test_find() {
         assert_eq!(
-            super::find(&setup().0, "hi", None, None).unwrap().name(),
+            super::find(&setup().0, "hi", Some("hello".to_string()), None)
+                .unwrap()
+                .name(),
             "hello"
         );
     }

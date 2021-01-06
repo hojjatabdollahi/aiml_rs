@@ -32,7 +32,7 @@ impl Node {
     }
 
     pub fn is_match(&self, input: &str) -> bool {
-        trace!("comparing {:?} to {:?}", self.path, input);
-        is_match(input, &self.path)
+        trace!("<NODE> comparing {:?} to {:?}", self.pattern.value, input);
+        is_match(input, &self.pattern.value)
     }
 }

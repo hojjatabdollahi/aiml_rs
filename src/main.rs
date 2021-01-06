@@ -20,13 +20,18 @@ fn main() {
     env_logger::init();
 
     ////let aiml = loader::load_aiml_set("data");
-    let aiml = loader::load_aiml_file("data/test/test_topics.aiml");
+    //let aiml = loader::load_aiml_file("data/test/test.aiml");
+    //let mut bot = Bot::new();
+    //info!("Q: Hello, A: {}", bot.query("HELLO", &aiml));
     //for cat in aiml.iter() {
     //debug!("{:?}", cat);
     //}
-    aiml.tree(true);
-    //let mut bot = Bot::new();
-    //info!("Q: Hello, A: {}", bot.query("HELLO", &aiml));
+    //aiml.tree(true);
+
+    let aiml = loader::load_aiml_file("data/test/test.aiml");
+    let mut bot = Bot::new();
+    assert_eq!(bot.query("HELLO", &aiml), "Well, hello! How are you doing?");
+
     //info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
     //info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
     //info!("Q: What what?, A: {}", bot.query("WHAT WHAT", &aiml));

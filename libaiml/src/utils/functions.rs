@@ -86,17 +86,18 @@ fn normalize_pattern(pattern: &str) -> Vec<String> {
 /// ```
 pub fn input_that_topic(input: &str, that: Option<&str>, topic: Option<&str>) -> String {
     let mut result = String::new();
-    result.push_str(input.trim());
+    result.push_str("<topic> ");
+    match topic {
+        Some(txt) => result.push_str(txt.trim()),
+        None => result.push_str("*"),
+    }
     result.push_str(" <that> ");
     match that {
         Some(txt) => result.push_str(txt.trim()),
         None => result.push_str("*"),
     }
-    result.push_str(" <topic> ");
-    match topic {
-        Some(txt) => result.push_str(txt.trim()),
-        None => result.push_str("*"),
-    }
+    result.push_str(" <pattern> ");
+    result.push_str(input.trim());
     result.to_lowercase()
 }
 
