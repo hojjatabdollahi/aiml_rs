@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'aiml_rs'",
+            "name": "Debug executable 'program_rs'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=aiml_rs",
+                    "--bin=program_rs",
                     "--package=aiml_rs"
                 ],
                 "filter": {
-                    "name": "aiml_rs",
+                    "name": "program_rs",
                     "kind": "bin"
                 }
             },
@@ -25,17 +25,36 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'aiml_rs'",
+            "name": "Debug unit tests in executable 'program_rs'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=aiml_rs",
+                    "--bin=program_rs",
                     "--package=aiml_rs"
                 ],
                 "filter": {
-                    "name": "aiml_rs",
+                    "name": "program_rs",
                     "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'libaiml'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=libaiml"
+                ],
+                "filter": {
+                    "name": "libaiml",
+                    "kind": "lib"
                 }
             },
             "args": [],

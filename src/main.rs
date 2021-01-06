@@ -15,7 +15,7 @@ use libaiml::storage::loader;
 
 fn main() {
     if std::env::var("RUST_LOG").is_err() {
-        std::env::set_var("RUST_LOG", "trace");
+        std::env::set_var("RUST_LOG", "info");
     }
     env_logger::init();
 
@@ -32,14 +32,15 @@ fn main() {
     let mut bot = Bot::new();
     assert_eq!(bot.query("HELLO", &aiml), "Well, hello! How are you doing?");
 
-    //info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
-    //info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
-    //info!("Q: What what?, A: {}", bot.query("WHAT WHAT", &aiml));
-    //info!("q: how are you, a: {}", bot.query("HOW ARE YOU", &aiml));
-    //info!(
-    //"q: Let's do an adventure, a: {}",
-    //bot.query("LETS DO AN ADVENTURE", &aiml)
-    //);
-    //info!("q: no, a: {}", bot.query("NO", &aiml));
-    //info!("q: yes, a: {}", bot.query("YES", &aiml));
+    info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
+    info!("Q: Doing well, A: {}", bot.query("DOING WELL", &aiml));
+    info!("Q: What what?, A: {}", bot.query("WHAT WHAT", &aiml));
+    info!("q: how are you, a: {}", bot.query("HOW ARE YOU", &aiml));
+    info!(
+    "q: Let's do an adventure, a: {}",
+    bot.query("LETS DO AN ADVENTURE", &aiml)
+    );
+    info!("q: no, a: {}", bot.query("NO", &aiml));
+    info!("q: yes, a: {}", bot.query("YES", &aiml));
+    info!("q: How are you doing?, a: {}", bot.query("How are you doing?", &aiml));
 }
