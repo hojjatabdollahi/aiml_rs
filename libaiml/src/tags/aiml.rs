@@ -173,9 +173,11 @@ impl AIML {
 mod tests {
     use crate::tags::aiml::AIML;
     use crate::tags::node::Node;
+    use test_env_log::test;
 
     #[test]
     fn test_aiml() {
+        info!("Testing aiml");
         let mut aiml = AIML::new();
         assert_eq!(aiml.iter().count(), 2);
         aiml.insert(Node::new("test".to_string(), None, None, None));

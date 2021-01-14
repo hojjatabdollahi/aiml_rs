@@ -104,6 +104,7 @@ pub fn input_that_topic(input: &str, that: Option<&str>, topic: Option<&str>) ->
 #[cfg(test)]
 mod tests {
     use crate::utils::functions::{is_match, normalize_input, normalize_pattern};
+    use test_env_log::test;
     #[test]
     fn test_is_match() {
         assert!(is_match("Hello friend", "Hello *"));
