@@ -23,10 +23,7 @@ pub fn parse(xmldata: &str, root: &mut AIML) {
 }
 
 fn parse_element(node: &Element, root: &mut AIML, topic: Option<&str>) {
-    let topic = match topic {
-        Some(s) => Some(String::from(s)),
-        None => None,
-    };
+    let topic = topic.map(String::from);
     match node.name() {
         "category" => {
             let pattern = node
@@ -36,10 +33,13 @@ fn parse_element(node: &Element, root: &mut AIML, topic: Option<&str>) {
                 .trim()
                 .to_owned();
             //let that = node.get_child("that", NS).cloned();
-            let that = match node.get_child("that", NS) {
-                Some(e) => Some(e.text().trim().to_owned()),
-                None => None,
-            };
+            // let that = match node.get_child("that", NS) {
+            //     Some(e) => Some(e.text().trim().to_owned()),
+            //     None => None,
+            // };
+            let that = node
+                .get_child("that", NS)
+                .map(|e| e.text().trim().to_owned());
             let template = node.get_child("template", NS).cloned();
             //TODO: I should insert the nodes in order, so
             // When it is being inserted it should keep the order

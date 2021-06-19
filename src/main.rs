@@ -26,9 +26,9 @@ fn main() {
     //for cat in aiml.iter() {
     //debug!("{:?}", cat);
     //}
-    //aiml.tree(true);
 
     let aiml = loader::load_aiml_file("data/test/test.aiml");
+    aiml.tree(true);
     let mut bot = Bot::new();
     assert_eq!(bot.query("HELLO", &aiml), "Well, hello! How are you doing?");
 
@@ -37,10 +37,13 @@ fn main() {
     info!("Q: What what?, A: {}", bot.query("WHAT WHAT", &aiml));
     info!("q: how are you, a: {}", bot.query("HOW ARE YOU", &aiml));
     info!(
-    "q: Let's do an adventure, a: {}",
-    bot.query("LETS DO AN ADVENTURE", &aiml)
+        "q: Let's do an adventure, a: {}",
+        bot.query("LETS DO AN ADVENTURE", &aiml)
     );
     info!("q: no, a: {}", bot.query("NO", &aiml));
     info!("q: yes, a: {}", bot.query("YES", &aiml));
-    info!("q: How are you doing?, a: {}", bot.query("How are you doing?", &aiml));
+    info!(
+        "q: How are you doing?, a: {}",
+        bot.query("How are you doing?", &aiml)
+    );
 }

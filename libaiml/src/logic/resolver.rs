@@ -1,6 +1,6 @@
 use crate::logic::userdata::Userdata;
 use crate::tags::aiml::AIML;
-use crate::utils::functions::input_that_topic;
+// use crate::utils::functions::input_that_topic;
 use minidom::Element;
 
 /// This function finds the answer and also makes changes to the userdata
@@ -112,9 +112,9 @@ fn find(root: &AIML, input: &str, that: Option<String>, topic: Option<String>) -
         match &that {
             Some(t) => {
                 match &node.that {
-                    Some(T) => {
-                        debug!("<That> comparing {}, {}", t, T.value);
-                        if t == &T.value {
+                    Some(t2) => {
+                        debug!("<That> comparing {}, {}", t, t2.value);
+                        if t == &t2.value {
                             ok = true;
                         }
                     }
